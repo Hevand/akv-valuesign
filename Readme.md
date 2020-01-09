@@ -36,6 +36,17 @@ This Key value is automatically created when adding a certificate, or can be imp
 An example implementation, using _RSASSA-PKCS1-v1_5 using SHA-512_ is provided. Other signing algorithms are supported; a full list can be found at the following link: 
 https://docs.microsoft.com/en-us/rest/api/keyvault/sign/sign#jsonwebkeysignaturealgorithm
 
+## Constructing a Signed PGP or CMS value
+PGP and [CMS](https://tools.ietf.org/html/rfc5652) define processes and structure for secure communication. For example, it defines how parties would share the original content (ContentInfo), the signature and used certificate / keys and potential other information used in generating that signature. 
+
+By itself, Azure Key Vault does not generate a full structured PGP or CMS message. It considers it to be the responsibility of the consuming application to do so, which can be explained by the potentially large message size involved and the limited scalability of an HSM. 
+
+To do this, libraries (System.Security.Cryptography.Pkcs.SignedCms) and frameworks (https://bouncycastle.org/) are available, but typically require the full certificate to be available on the local machine. 
+
+An example of this approach (using CMS and BouncyCastle) can be found here: https://github.com/onovotny/SignedCmsKeyVault/
+
+
+
 # Approach
 The infrastructure required for this setup is as follows: 
 * Create an App Registration in Azure AD (unless you plan to use Azure's Managed Identity)
